@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.cfr</groupId>
+        <artifactId>maven-config</artifactId>
+        <version>3</version>
+    </parent>
+
     <groupId>org.cfr.multicastevent</groupId>
     <artifactId>multicastevent-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <name>Spring Module Multicast Event</name>
-    <description>Spring module for Multicast Event</description>
+    <name>Module Multicast Event</name>
+    <description>Module for Multicast Event</description>
     <packaging>pom</packaging>
     <developers>
         <developer>
@@ -19,71 +26,45 @@
         <maven>3.0.4</maven>
     </prerequisites>
     <scm>
-        <connection>scm:git:https://github.com/devacfr/multicast-event.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com:devacfr/multicast-event.git</developerConnection>
+        <connection>scm:git:git@github.com:devacfr/multicast-event.git</connection>
+        <developerConnection>scm:git:git@github.com:devacfr/multicast-event.git</developerConnection>
         <url>https://github.com/devacfr/multicast-event</url>
     </scm>
     <properties>
+
+        <!-- Enable report aggregation -->
+        <aggregate>true</aggregate>
+        <issue.url>https://github.com/devacfr/multicast-event/issues</issue.url>
+        <distribution.releaseRepositoryUrl>https://api.bintray.com/maven/devacfr/maven/multicast-event</distribution.releaseRepositoryUrl>
+        <CI.url>https://travis-ci.org/devacfr/multicast-event</CI.url>
+
         <!-- External dependencies versions. -->
         <jgroups.version>2.7.0.GA</jgroups.version>
         <slf4j.version>1.5.8</slf4j.version>
         <spring.version>3.0.1.RELEASE</spring.version>
 
         <!-- Internal dependencies versions. -->
-        <org.cfr.commons.version>1.0.0-SNAPSHOT</org.cfr.commons.version>
-        
+        <org.cfr.commons.version>1.0.1</org.cfr.commons.version>
+
         <!-- External plugin dependencies versions. -->
         <cxf-codegen-plugin.version>2.2</cxf-codegen-plugin.version>
-        <maven-compiler-plugin.version>2.0.2</maven-compiler-plugin.version>
-        <maven-release-plugin.version>2.0-beta-9</maven-release-plugin.version>
-        <maven-resources-plugin.version>2.4.1</maven-resources-plugin.version>
-        <maven-source-plugin.version>2.1</maven-source-plugin.version>
-        <maven-clover2-plugin.version>3.0.1</maven-clover2-plugin.version>
     </properties>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven-compiler-plugin.version}</version>
-                <configuration>
-                    <encoding>UTF-8</encoding>
-                    <source>1.6</source>
-                    <target>1.6</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>${maven-compiler-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>${maven-release-plugin.version}</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>${maven-resources-plugin.version}</version>
-                <configuration>
-                    <encoding>UTF-8</encoding>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+
     <modules>
         <module>multicastevent-core</module>
         <module>multicastevent-jgroups</module>
     </modules>
 
+    <repositories>
+        <repository>
+            <id>bintray</id>
+            <url>http://dl.bintray.com/devacfr/maven</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 </project>
