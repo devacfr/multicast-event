@@ -1,31 +1,42 @@
 package org.cfr.multicastevent.jgroups;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.net.InetAddress;
 
-import org.cfr.multicastevent.core.multicast.IAddress;
+import javax.annotation.Nonnull;
+
+import org.cfr.commons.util.Assert;
+import org.cfr.multicastevent.core.spi.IAddress;
 import org.jgroups.Address;
-import org.springframework.util.Assert;
-
+import org.jgroups.stack.IpAddress;
 
 /**
  * JGroups Address Adapter
  * @author acochard
  *
  */
-public class JGroupsAddressAdapter implements IAddress, Address {
+public class AddressDecorator implements IAddress, Address {
 
-    Address address;
+    private Address address;
 
-    public JGroupsAddressAdapter() {
+    public AddressDecorator() {
     }
 
-    public JGroupsAddressAdapter(Address address) {
-        Assert.notNull(address, "address is required");
-        this.address = address;
+    public AddressDecorator(@Nonnull final Address address) {
+        this.address = Assert.notNull(address, "address is required");
+    }
+
+    @Override
+    public InetAddress getIpAddress() {
+        if (address instanceof IpAddress) {
+            IpAddress addr = (IpAddress) address;
+            return addr.getIpAddress();
+        }
+        return null;
     }
 
     @Override
@@ -44,17 +55,12 @@ public class JGroupsAddressAdapter implements IAddress, Address {
     }
 
     @Override
-    public boolean isMulticastAddress() {
-        return address.isMulticastAddress();
-    }
-
-    @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         address = (Address) in.readObject();
     }
 
     @Override
-    public void readFrom(DataInputStream in) throws IOException, IllegalAccessException, InstantiationException {
+    public void readFrom(DataInput in) throws Exception {
         address.readFrom(in);
     }
 
@@ -74,7 +80,7 @@ public class JGroupsAddressAdapter implements IAddress, Address {
     }
 
     @Override
-    public void writeTo(DataOutputStream out) throws IOException {
+    public void writeTo(DataOutput out) throws Exception {
         address.writeTo(out);
     }
 }

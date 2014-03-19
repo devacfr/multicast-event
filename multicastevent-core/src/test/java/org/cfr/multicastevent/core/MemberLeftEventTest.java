@@ -1,7 +1,7 @@
 package org.cfr.multicastevent.core;
 
 import org.cfr.multicastevent.core.MemberLeftEvent;
-import org.cfr.multicastevent.core.multicast.IMember;
+import org.cfr.multicastevent.core.spi.IMember;
 import org.easymock.EasyMock;
 import org.junit.Test;
 

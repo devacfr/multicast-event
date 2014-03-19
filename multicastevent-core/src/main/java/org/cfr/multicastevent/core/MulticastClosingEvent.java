@@ -1,10 +1,13 @@
 package org.cfr.multicastevent.core;
 
-import org.springframework.context.ApplicationEvent;
+import java.util.EventObject;
 
-public class MulticastClosingEvent extends ApplicationEvent {
+public class MulticastClosingEvent extends EventObject {
 
-    private static final long serialVersionUID = 1L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -8326776464800809156L;
 
     public MulticastClosingEvent(Object source) {
         super(source);

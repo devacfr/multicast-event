@@ -1,4 +1,4 @@
-package org.cfr.multicastevent.core.multicast;
+package org.cfr.multicastevent.core.spi;
 
 import java.net.InetAddress;
 

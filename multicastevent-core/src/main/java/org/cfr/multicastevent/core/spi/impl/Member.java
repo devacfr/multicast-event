@@ -1,8 +1,8 @@
-package org.cfr.multicastevent.core.multicast.impl;
+package org.cfr.multicastevent.core.spi.impl;
 
 import java.net.InetAddress;
 
-import org.cfr.multicastevent.core.multicast.IMember;
+import org.cfr.multicastevent.core.spi.IMember;
 
 
 /**

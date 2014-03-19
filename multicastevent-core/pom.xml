@@ -1,36 +1,47 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<parent>
-		<artifactId>multicastevent-parent</artifactId>
-		<groupId>org.cfr.multicastevent</groupId>
-		<version>1.0.0-SNAPSHOT</version>
-	</parent>
-	<modelVersion>4.0.0</modelVersion>
-	<artifactId>multicastevent-core</artifactId>
-	<name>MulticastEvent Core</name>
-	<packaging>jar</packaging>
-	<description>MulticastEvent Core</description>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <artifactId>multicastevent-parent</artifactId>
+        <groupId>org.cfr.multicastevent</groupId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>multicastevent-core</artifactId>
+    <name>MulticastEvent Core</name>
+    <packaging>jar</packaging>
+    <description>MulticastEvent Core</description>
     <properties>
         <main.basedir>${project.parent.basedir}</main.basedir>
     </properties>
-	<dependencies>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-beans</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-core</artifactId>
-		</dependency>
-        <!--  Test Dependency -->
+    <dependencies>
+        <dependency>
+            <groupId>org.cfr.commons</groupId>
+            <artifactId>commons-util</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.event</groupId>
+            <artifactId>atlassian-event</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Test Dependency -->
         <dependency>
             <groupId>org.cfr.commons</groupId>
             <artifactId>commons-testing</artifactId>
             <version>${org.cfr.commons.version}</version>
             <scope>test</scope>
         </dependency>
-	</dependencies>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 </project>

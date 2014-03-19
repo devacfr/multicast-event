@@ -1,6 +1,6 @@
-package org.cfr.multicastevent.core.multicast;
+package org.cfr.multicastevent.core.spi;
 
-import org.cfr.multicastevent.core.multicast.MulticastEvent;
+import org.cfr.multicastevent.core.spi.MulticastEvent;
 import org.junit.Ignore;
 import org.junit.Test;
 

@@ -1,15 +1,15 @@
 package org.cfr.multicastevent.core;
 
-import org.cfr.multicastevent.core.multicast.IMember;
-import org.springframework.context.ApplicationEvent;
+import java.util.EventObject;
 
+import org.cfr.multicastevent.core.spi.IMember;
 
-public abstract class MemberEvent extends ApplicationEvent {
+public abstract class MemberEvent extends EventObject {
 
     /**
-     * Default class serial version unique identifier.
+     * 
      */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -3438936632485077928L;
 
     private IMember member;
 

@@ -39,21 +39,39 @@
         <CI.url>https://travis-ci.org/devacfr/multicast-event</CI.url>
 
         <!-- External dependencies versions. -->
-        <jgroups.version>2.7.0.GA</jgroups.version>
+        <javax.inject.version>1</javax.inject.version>
+        <jgroups.version>3.4.3.Final</jgroups.version>
         <slf4j.version>1.5.8</slf4j.version>
-        <spring.version>3.0.1.RELEASE</spring.version>
 
         <!-- Internal dependencies versions. -->
         <org.cfr.commons.version>1.0.1</org.cfr.commons.version>
 
-        <!-- External plugin dependencies versions. -->
-        <cxf-codegen-plugin.version>2.2</cxf-codegen-plugin.version>
     </properties>
 
     <modules>
         <module>multicastevent-core</module>
         <module>multicastevent-jgroups</module>
     </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.cfr.commons</groupId>
+                <artifactId>commons-util</artifactId>
+                <version>${org.cfr.commons.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.inject</groupId>
+                <artifactId>javax.inject</artifactId>
+                <version>${javax.inject.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jgroups</groupId>
+                <artifactId>jgroups</artifactId>
+                <version>${jgroups.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <repositories>
         <repository>
