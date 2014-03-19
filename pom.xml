@@ -61,6 +61,11 @@
                 <version>${org.cfr.commons.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.cfr.commons</groupId>
+                <artifactId>commons-testing</artifactId>
+                <version>${org.cfr.commons.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>javax.inject</groupId>
                 <artifactId>javax.inject</artifactId>
                 <version>${javax.inject.version}</version>

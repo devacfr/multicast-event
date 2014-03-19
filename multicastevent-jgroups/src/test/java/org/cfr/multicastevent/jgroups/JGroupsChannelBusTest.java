@@ -10,10 +10,10 @@ import org.cfr.multicastevent.core.IMulticastPublisher;
 import org.cfr.multicastevent.core.spi.IAddress;
 import org.cfr.multicastevent.core.spi.IMember;
 import org.cfr.multicastevent.core.spi.MulticastEvent;
+import org.easymock.internal.LastControl;
 import org.jgroups.Message;
 import org.jgroups.stack.IpAddress;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 public class JGroupsChannelBusTest extends EasyMockTestCase {
@@ -21,18 +21,21 @@ public class JGroupsChannelBusTest extends EasyMockTestCase {
     private IMulticastPublisher multicastPublisher;
 
     @Override
-    @Before
     public void setUp() throws Exception {
         super.setUp();
+        // TODO [devacfr] remove when upgrade commons-testing 1.0.2+
+        LastControl.pullMatchers();
         this.multicastPublisher = mock(IMulticastPublisher.class);
         expect(multicastPublisher.getClusterName()).andReturn("test").anyTimes();
     }
 
     @Test
     public void testGetMembers() throws Exception {
-        JGroupsChannelBus provider = new JGroupsChannelBus(multicastPublisher);
 
         replay();
+
+        JGroupsChannelBus provider = new JGroupsChannelBus(multicastPublisher);
+
         try {
             provider.start();
 
@@ -50,9 +53,9 @@ public class JGroupsChannelBusTest extends EasyMockTestCase {
 
     @Test
     public void testMemberJoined() throws UnknownHostException {
-        JGroupsChannelBus provider = new JGroupsChannelBus(multicastPublisher);
-
         replay();
+
+        JGroupsChannelBus provider = new JGroupsChannelBus(multicastPublisher);
 
         provider.memberJoined(new IpAddress("0.0.0.0", 0));
         verify();
@@ -60,9 +63,9 @@ public class JGroupsChannelBusTest extends EasyMockTestCase {
 
     @Test
     public void testMemberLeft() throws UnknownHostException {
-        JGroupsChannelBus provider = new JGroupsChannelBus(multicastPublisher);
-
         replay();
+
+        JGroupsChannelBus provider = new JGroupsChannelBus(multicastPublisher);
 
         provider.memberLeft(new IpAddress("0.0.0.0", 0));
         verify();
@@ -70,9 +73,9 @@ public class JGroupsChannelBusTest extends EasyMockTestCase {
 
     @Test
     public void testPublish() throws Exception {
-        JGroupsChannelBus provider = new JGroupsChannelBus(multicastPublisher);
-
         replay();
+
+        JGroupsChannelBus provider = new JGroupsChannelBus(multicastPublisher);
         MulticastEvent event = new MulticastEvent();
 
         try {
@@ -88,9 +91,9 @@ public class JGroupsChannelBusTest extends EasyMockTestCase {
 
     @Test
     public void testReceive() throws Exception {
-        JGroupsChannelBus provider = new JGroupsChannelBus(multicastPublisher);
-
         replay();
+
+        JGroupsChannelBus provider = new JGroupsChannelBus(multicastPublisher);
 
         MulticastEvent event = new MulticastEvent();
 

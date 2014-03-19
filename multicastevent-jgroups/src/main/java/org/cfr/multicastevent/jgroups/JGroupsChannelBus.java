@@ -45,9 +45,7 @@ public class JGroupsChannelBus extends ReceiverAdapter implements IChannel {
 
     private static final Logger logger = LoggerFactory.getLogger(JGroupsChannelBus.class);
 
-    private static final String resourceIpv4 = "classpath:udp.xml";
-
-    private static final String resourceIpv6 = "classpath:udp.xml";
+    private static final String resourceUdp = "classpath:udp.xml";
 
     private JChannel channel;
 
@@ -76,29 +74,22 @@ public class JGroupsChannelBus extends ReceiverAdapter implements IChannel {
         }
         URL url = null;
         if (configurationAuto) {
-            try {
-                url = ResourceUtils.getURL(resourceIpv6);
-                // Automatic configuration, try ipv6 first
-                channel = createChannel(url);
-                return;
-            } catch (Exception e) {
-                logger.error(e.getMessage(), e);
-                stop();
-                logger.trace("Unable to open channel bus with ipv6", e);
-                logger.debug("Unable to connect with ipv6, trying ipv4...");
-                url = ResourceUtils.getURL(resourceIpv4);
-            }
+            url = ResourceUtils.getURL(resourceUdp);
         } else {
             url = this.configuration.toURL();
         }
-
-        // manual or retry Connecting
         try {
+            url = ResourceUtils.getURL(resourceUdp);
+            // Automatic configuration, try ipv6 first
             channel = createChannel(url);
+            return;
         } catch (Exception e) {
-            logger.error("Unable to open channel bus '" + publisher.getClusterName() + "'", e);
+            logger.error(e.getMessage(), e);
             stop();
+            logger.error("Unable to open channel bus", e);
+            throw e;
         }
+
     }
 
     @Override

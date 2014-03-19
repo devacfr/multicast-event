@@ -30,7 +30,7 @@ public class AddressDecoratorTest extends EasyMockTestCase {
     @Test
     public void testCompareTo() {
         Address addressExpected = mock(Address.class);
-        EasyMock.expect(addressExpected.compareTo(null)).andReturn(1);
+        expect(addressExpected.compareTo(null)).andReturn(1);
         replay();
 
         AddressDecorator adapter = new AddressDecorator(addressExpected);
@@ -56,7 +56,7 @@ public class AddressDecoratorTest extends EasyMockTestCase {
     public void testReadFrom() throws Exception {
         Address addressExpected = mock(Address.class);
         addressExpected.readFrom(null);
-        EasyMock.expectLastCall();
+        expectLastCall();
         replay();
 
         AddressDecorator adapter = new AddressDecorator(addressExpected);
@@ -70,7 +70,7 @@ public class AddressDecoratorTest extends EasyMockTestCase {
         Address addressExpected = mock(Address.class);
         ObjectOutput output = mock(ObjectOutput.class);
         output.writeObject(addressExpected);
-        EasyMock.expectLastCall();
+        expectLastCall();
         replay();
 
         AddressDecorator adapter = new AddressDecorator(addressExpected);
@@ -83,7 +83,7 @@ public class AddressDecoratorTest extends EasyMockTestCase {
     public void testWriteTo() throws Exception {
         Address addressExpected = mock(Address.class);
         addressExpected.writeTo((DataOutputStream) EasyMock.anyObject());
-        EasyMock.expectLastCall();
+        expectLastCall();
         replay();
 
         AddressDecorator adapter = new AddressDecorator(addressExpected);
