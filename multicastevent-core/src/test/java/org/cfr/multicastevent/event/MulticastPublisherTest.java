@@ -1,4 +1,4 @@
-package org.cfr.multicastevent.core;
+package org.cfr.multicastevent.event;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -6,9 +6,10 @@ import java.util.Collection;
 import junit.framework.Assert;
 
 import org.cfr.commons.testing.EasyMockTestCase;
+import org.cfr.multicastevent.core.AbstractChannelAdapter;
+import org.cfr.multicastevent.core.MulticastEvent;
 import org.cfr.multicastevent.core.spi.IChannel;
 import org.cfr.multicastevent.core.spi.IMember;
-import org.cfr.multicastevent.core.spi.MulticastEvent;
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,7 +32,7 @@ public class MulticastPublisherTest extends EasyMockTestCase {
 
     @Test
     public void defaultConstructor() throws Exception {
-        new MulticastPublisher(eventPublisher, channel, "name");
+        new MulticastEventPublisher(eventPublisher, channel, "name");
     }
 
     @Test
@@ -40,7 +41,7 @@ public class MulticastPublisherTest extends EasyMockTestCase {
         EasyMock.expect(channel.getMembers()).andReturn(members);
         replay();
 
-        MulticastPublisher multicast = new MulticastPublisher(eventPublisher, channel, "name");
+        MulticastEventPublisher multicast = new MulticastEventPublisher(eventPublisher, channel, "name");
 
         Assert.assertEquals(members, multicast.getMembers());
         verify();
@@ -48,7 +49,7 @@ public class MulticastPublisherTest extends EasyMockTestCase {
 
     @Test
     public void testOnApplicationEvent() throws Exception {
-        MulticastPublisher multicast = new MulticastPublisher(eventPublisher, channel, "name");
+        MulticastEventPublisher multicast = new MulticastEventPublisher(eventPublisher, channel, "name");
 
         MulticastEvent event = new MulticastEvent(new Object());
         channel.sendNotification(event);
@@ -64,7 +65,7 @@ public class MulticastPublisherTest extends EasyMockTestCase {
 
         replay();
 
-        MulticastPublisher multicast = new MulticastPublisher(eventPublisher, channel, "name");
+        MulticastEventPublisher multicast = new MulticastEventPublisher(eventPublisher, channel, "name");
 
         multicast.sendNotification(null);
         verify();
@@ -72,7 +73,7 @@ public class MulticastPublisherTest extends EasyMockTestCase {
 
     @Test
     public void testOnApplicationEventWithOnSameProvider() throws Exception {
-        MulticastPublisher multicast = new MulticastPublisher(eventPublisher, channel, "name");
+        AbstractChannelAdapter multicast = new MulticastEventPublisher(eventPublisher, channel, "name");
         MulticastEvent event = new MulticastEvent(multicast);
         replay();
 

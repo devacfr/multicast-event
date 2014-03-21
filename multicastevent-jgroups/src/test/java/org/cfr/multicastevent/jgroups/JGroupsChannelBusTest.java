@@ -6,10 +6,11 @@ import java.util.Collection;
 
 import org.cfr.commons.testing.EasyMockTestCase;
 import org.cfr.commons.util.collection.CollectionUtil;
-import org.cfr.multicastevent.core.IMulticastPublisher;
+import org.cfr.multicastevent.core.MulticastEvent;
 import org.cfr.multicastevent.core.spi.IAddress;
+import org.cfr.multicastevent.core.spi.IEndPointDelegator;
 import org.cfr.multicastevent.core.spi.IMember;
-import org.cfr.multicastevent.core.spi.MulticastEvent;
+import org.cfr.multicastevent.core.spi.impl.Member;
 import org.easymock.internal.LastControl;
 import org.jgroups.Message;
 import org.jgroups.stack.IpAddress;
@@ -18,14 +19,14 @@ import org.junit.Test;
 
 public class JGroupsChannelBusTest extends EasyMockTestCase {
 
-    private IMulticastPublisher multicastPublisher;
+    private IEndPointDelegator multicastPublisher;
 
     @Override
     public void setUp() throws Exception {
         super.setUp();
         // TODO [devacfr] remove when upgrade commons-testing 1.0.2+
         LastControl.pullMatchers();
-        this.multicastPublisher = mock(IMulticastPublisher.class);
+        this.multicastPublisher = mock(IEndPointDelegator.class);
         expect(multicastPublisher.getClusterName()).andReturn("test").anyTimes();
     }
 
@@ -57,7 +58,7 @@ public class JGroupsChannelBusTest extends EasyMockTestCase {
 
         JGroupsChannelBus provider = new JGroupsChannelBus(multicastPublisher);
 
-        provider.memberJoined(new IpAddress("0.0.0.0", 0));
+        provider.memberJoined(new Member(InetAddress.getLocalHost()));
         verify();
     }
 
@@ -67,7 +68,7 @@ public class JGroupsChannelBusTest extends EasyMockTestCase {
 
         JGroupsChannelBus provider = new JGroupsChannelBus(multicastPublisher);
 
-        provider.memberLeft(new IpAddress("0.0.0.0", 0));
+        provider.memberLeft(new Member(InetAddress.getLocalHost()));
         verify();
     }
 

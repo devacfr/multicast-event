@@ -18,54 +18,45 @@ package org.cfr.multicastevent.core.spi;
 import java.util.Collection;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import org.cfr.multicastevent.core.MulticastEvent;
 
 /**
  * 
- * @author cfriedri
- *
+ * @author devacfr
+ * @since 1.0
  */
-public interface IChannel {
+public interface IEndPointDelegator {
 
     /**
      * 
      * @return
      */
-    boolean isStarted();
-
-    /**
-     * 
-     * @throws Exception
-     */
-    void stop() throws Exception;
-
-    /**
-     * 
-     * @throws Exception
-     */
-    void start() throws Exception;
+    @Nonnull
+    String getClusterName();
 
     /**
      * 
      * @param event
-     * @throws Exception 
      */
-    void sendNotification(@Nullable MulticastEvent event) throws Exception;
+    void receiveEvent(@Nonnull MulticastEvent event);
 
     /**
      * 
-     * @return
+     * @param member
      */
-    @Nonnull
-    Collection<IMember> getMembers();
+    void memberLeft(@Nonnull IMember member);
 
     /**
      * 
-     * @return
+     * @param member
      */
-    @Nonnull
-    IAddress getLocalAddress();
+    void memberJoined(@Nonnull IMember member);
+
+    /**
+     * 
+     * @param member
+     */
+    void memberChanged(@Nonnull Collection<IMember> member);
 
 }

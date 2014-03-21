@@ -1,3 +1,18 @@
+/**
+ * Copyright 2014 devacfr<christophefriederich@mac.com>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.cfr.multicastevent.jgroups;
 
 import java.net.URI;
@@ -7,17 +22,19 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.cfr.commons.util.Assert;
 import org.cfr.commons.util.ResourceUtils;
-import org.cfr.multicastevent.core.IMulticastPublisher;
+import org.cfr.commons.util.collection.CollectionUtil;
+import org.cfr.multicastevent.core.MulticastEvent;
 import org.cfr.multicastevent.core.spi.IAddress;
 import org.cfr.multicastevent.core.spi.IChannel;
+import org.cfr.multicastevent.core.spi.IEndPointDelegator;
 import org.cfr.multicastevent.core.spi.IMember;
-import org.cfr.multicastevent.core.spi.MulticastEvent;
 import org.cfr.multicastevent.core.spi.impl.Member;
 import org.jgroups.Address;
 import org.jgroups.Event;
@@ -32,6 +49,7 @@ import org.jgroups.stack.Protocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 
 /**
@@ -53,11 +71,11 @@ public class JGroupsChannelBus extends ReceiverAdapter implements IChannel {
 
     private boolean configurationAuto = false;
 
-    private final IMulticastPublisher publisher;
+    private final IEndPointDelegator endPoint;
 
     @Inject
-    public JGroupsChannelBus(@Nonnull final IMulticastPublisher publisher) {
-        this.publisher = Assert.notNull(publisher, "eventPublisher is required");
+    public JGroupsChannelBus(@Nonnull final IEndPointDelegator endPoint) {
+        this.endPoint = Assert.notNull(endPoint, "endPoint is required");
     }
 
     @Override
@@ -115,7 +133,7 @@ public class JGroupsChannelBus extends ReceiverAdapter implements IChannel {
             }
         }
         // Connect and register listener
-        channel.connect(this.publisher.getClusterName());
+        channel.connect(this.endPoint.getClusterName());
         channel.setReceiver(this);
         return channel;
     }
@@ -142,18 +160,7 @@ public class JGroupsChannelBus extends ReceiverAdapter implements IChannel {
         if (this.channel == null) {
             return Collections.emptyList();
         }
-        Collection<IMember> members = Lists.newArrayList();
-        List<Address> membersList = this.channel.getView().getMembers();
-        List<IpAddress> addresses = Lists.newArrayList();
-        for (org.jgroups.Address member : membersList) {
-            addresses.add(getPhysicalAddress(member));
-        }
-
-        for (IpAddress address : addresses) {
-            IMember member = new Member(address.getIpAddress());
-            members.add(member);
-        }
-        return Collections.unmodifiableCollection(members);
+        return CollectionUtil.transform(this.channel.getView().getMembers(), new ToMember());
     }
 
     public IpAddress getPhysicalAddress(Address address) {
@@ -195,7 +202,7 @@ public class JGroupsChannelBus extends ReceiverAdapter implements IChannel {
                 logger.debug("Receiving multicast event: " + event);
             }
             try {
-                publisher.receiveEvent(event);
+                endPoint.receiveEvent(event);
             } catch (Exception ex) {
                 logger.error("error publishing notification", ex);
             }
@@ -206,22 +213,20 @@ public class JGroupsChannelBus extends ReceiverAdapter implements IChannel {
     public void suspect(Address address) {
         if (address instanceof IpAddress) {
             IMember member = new Member(((IpAddress) address).getIpAddress());
-            publisher.memberLeft(member);
+            endPoint.memberLeft(member);
         }
     }
 
-    public void memberJoined(Address address) {
-        if (address instanceof IpAddress) {
-            IMember member = new Member(((IpAddress) address).getIpAddress());
-            publisher.memberJoined(member);
-        }
+    public void memberChanged(Collection<IMember> member) {
+        endPoint.memberChanged(member);
     }
 
-    public void memberLeft(Address address) {
-        if (address instanceof IpAddress) {
-            IMember member = new Member(((IpAddress) address).getIpAddress());
-            publisher.memberLeft(member);
-        }
+    public void memberJoined(IMember member) {
+        endPoint.memberJoined(member);
+    }
+
+    public void memberLeft(IMember member) {
+        endPoint.memberLeft(member);
     }
 
     @Override
@@ -233,6 +238,7 @@ public class JGroupsChannelBus extends ReceiverAdapter implements IChannel {
             return;
         List<Address> members = this.channel.getView().getMembers();
         List<Address> tmp = new_view.getMembers();
+        memberChanged(CollectionUtil.transform(tmp, new ToMember()));
 
         synchronized (members) {
             // get new members
@@ -254,13 +260,29 @@ public class JGroupsChannelBus extends ReceiverAdapter implements IChannel {
 
         if (!joined_mbrs.isEmpty())
             for (int i = 0; i < joined_mbrs.size(); i++)
-                memberJoined(joined_mbrs.get(i));
+                memberJoined(getPysicalMember(joined_mbrs.get(i)));
         if (!left_mbrs.isEmpty())
             for (int i = 0; i < left_mbrs.size(); i++)
-                memberLeft(left_mbrs.get(i));
+                memberLeft(getPysicalMember(left_mbrs.get(i)));
     }
 
-    public void setConfiguration(URI configuration) {
+    public void setConfiguration(@Nonnull URI configuration) {
         this.configuration = configuration;
+    }
+
+    @Nonnull
+    protected IMember getPysicalMember(@Nonnull Address member) {
+        return new Member(getPhysicalAddress(member).getIpAddress());
+    }
+
+    public class ToMember implements Function<Address, IMember> {
+
+        @Override
+        @Nullable
+        public IMember apply(@Nullable Address input) {
+            if (input == null)
+                return null;
+            return getPysicalMember(input);
+        }
     }
 }
