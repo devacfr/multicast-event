@@ -2,18 +2,25 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <groupId>org.cfr.multicastevent</groupId>
+    <artifactId>multicastevent-parent</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+
     <parent>
         <groupId>org.cfr</groupId>
         <artifactId>maven-config</artifactId>
         <version>3</version>
     </parent>
 
-    <groupId>org.cfr.multicastevent</groupId>
-    <artifactId>multicastevent-parent</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
     <name>Module Multicast Event</name>
     <description>Module for Multicast Event</description>
     <packaging>pom</packaging>
+    
+    <modules>
+        <module>multicastevent-core</module>
+        <module>multicastevent-jgroups</module>
+    </modules>
+    
     <developers>
         <developer>
             <id>devacfr</id>
@@ -48,10 +55,6 @@
 
     </properties>
 
-    <modules>
-        <module>multicastevent-core</module>
-        <module>multicastevent-jgroups</module>
-    </modules>
 
     <dependencyManagement>
         <dependencies>

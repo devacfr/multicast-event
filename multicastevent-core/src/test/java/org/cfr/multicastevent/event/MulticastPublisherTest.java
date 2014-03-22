@@ -24,6 +24,7 @@ import org.cfr.commons.testing.EasyMockTestCase;
 import org.cfr.multicastevent.core.AbstractChannelAdapter;
 import org.cfr.multicastevent.core.MulticastEvent;
 import org.cfr.multicastevent.core.spi.IChannel;
+import org.cfr.multicastevent.core.spi.IEndPointDelegator;
 import org.cfr.multicastevent.core.spi.IMember;
 import org.easymock.EasyMock;
 import org.junit.Before;
@@ -64,13 +65,16 @@ public class MulticastPublisherTest extends EasyMockTestCase {
 
     @Test
     public void testOnApplicationEvent() throws Exception {
-        MulticastEventPublisher multicast = new MulticastEventPublisher(eventPublisher, channel, "name");
+
+        channel.attachChanel(anyObject(IEndPointDelegator.class));
+        expectLastCall().once();
 
         MulticastEvent event = new MulticastEvent(new Object());
         channel.sendNotification(event);
         expectLastCall();
         replay();
 
+        MulticastEventPublisher multicast = new MulticastEventPublisher(eventPublisher, channel, "name");
         multicast.sendNotification(event);
         verify();
     }
@@ -88,10 +92,13 @@ public class MulticastPublisherTest extends EasyMockTestCase {
 
     @Test
     public void testOnApplicationEventWithOnSameProvider() throws Exception {
-        AbstractChannelAdapter multicast = new MulticastEventPublisher(eventPublisher, channel, "name");
-        MulticastEvent event = new MulticastEvent(multicast);
+        channel.attachChanel(anyObject(IEndPointDelegator.class));
+        expectLastCall().once();
+
         replay();
 
+        AbstractChannelAdapter multicast = new MulticastEventPublisher(eventPublisher, channel, "name");
+        MulticastEvent event = new MulticastEvent(multicast);
         multicast.sendNotification(event);
         verify();
     }
