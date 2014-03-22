@@ -17,13 +17,20 @@ package org.cfr.multicastevent.core.spi;
 
 import java.net.InetAddress;
 
+import javax.annotation.Nullable;
+
 /**
- * 
- * @author devacfr
+ * This is simple member interface connected in a cluster.
+ * @author devacfr<christophefriederich@mac.com>
  * @since 1.0
  */
 public interface IMember {
 
+    /**
+     * Gets the Internet Protocol address if exists.
+     * @return Return {@link InetAddress} of member if exists, otherwise <code>null</code>.
+     */
+    @Nullable
     InetAddress getAddress();
 
 }

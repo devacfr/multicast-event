@@ -17,6 +17,11 @@ package org.cfr.multicastevent.core;
 
 import java.util.EventObject;
 
+/**
+ * 
+ * @author devacfr<christophefriederich@mac.com>
+ * @since 1.0
+ */
 public class MulticastClosingEvent extends EventObject {
 
     /**

@@ -28,14 +28,11 @@ import org.cfr.multicastevent.core.spi.IMember;
 
 /**
  * 
- * @author devacfr
+ * @author devacfr<christophefriederich@mac.com>
  * @since 1.0
  */
-@Named(DefaultChannelAdapter.MULTICAST_CHANEL_ADAPTER_NAME)
 @Singleton
 public class DefaultChannelAdapter extends AbstractChannelAdapter {
-
-    public final static String MULTICAST_CHANEL_ADAPTER_NAME = "MulticastChanelAdapter";
 
     private IInboundEndpoint inboundEndpoint;
 
@@ -55,7 +52,7 @@ public class DefaultChannelAdapter extends AbstractChannelAdapter {
     }
 
     @Override
-    public void memberChanged(Collection<IMember> member) {
+    public void membersChanged(Collection<IMember> member) {
         //noop
     }
 
@@ -71,8 +68,9 @@ public class DefaultChannelAdapter extends AbstractChannelAdapter {
 
     @Override
     public void receiveEvent(MulticastEvent event) {
-        if (this.inboundEndpoint == null)
+        if (this.inboundEndpoint == null) {
             return;
+        }
         this.inboundEndpoint.receive(event);
     };
 

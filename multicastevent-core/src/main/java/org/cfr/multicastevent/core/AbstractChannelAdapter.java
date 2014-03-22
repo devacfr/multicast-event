@@ -19,6 +19,7 @@ import java.util.Collection;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
@@ -32,63 +33,116 @@ import org.slf4j.LoggerFactory;
 
 /**
  * 
- * @author cfriedri
+ * @author devacfr<christophefriederich@mac.com>
+ * @since 1.0
  *
  */
 public abstract class AbstractChannelAdapter implements IChanelAdapter, IEndPointDelegator,
         Provider<IEndPointDelegator> {
 
     /**
-     * log instance
+     * log instance.
      */
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
-     * the cluster name
+     * the cluster name.
      */
     private final String clusterName;
 
     /**
-     * the endPoint channel
+     * the endPoint channel.
      */
     private final IChannel channel;
 
+    /**
+     * flag indicating whether channel start automatically after initialisation.
+     */
+    private boolean startAfterInitialize = true;
+
+    /**
+     * Default constructor.
+     * @param channel the channel
+     * @param clusterName
+     */
     @Inject
-    public AbstractChannelAdapter(@Nonnull final IChannel channel, @Named("clusterName") String clusterName) {
+    public AbstractChannelAdapter(@Nonnull final IChannel channel, @Named("clusterName") final String clusterName) {
         this.clusterName = Assert.hasText(clusterName, "cluster is required");
         this.channel = Assert.notNull(channel, "chanel is required");
+        this.channel.attachChanel(get());
     }
 
-    @Override
-    public IEndPointDelegator get() {
-        return this;
-    }
-
-    @Override
-    public String getClusterName() {
-        return clusterName;
+    /**
+     * 
+     * @throws Exception
+     */
+    @PostConstruct
+    protected void startAfterInitialize() throws Exception {
+        if (startAfterInitialize) {
+            start();
+        }
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
+    public IEndPointDelegator get() {
+        return this;
+    }
+
+    @Override
+    @Nonnull
+    public String getClusterName() {
+        return clusterName;
+    }
+
+    /**
+     * @return the startAfterInitialize
+     */
+    public boolean isStartAfterInitialize() {
+        return startAfterInitialize;
+    }
+
+    /**
+     * @param startAfterInitialize the startAfterInitialize to set
+     */
+    public void setStartAfterInitialize(final boolean startAfterInitialize) {
+        this.startAfterInitialize = startAfterInitialize;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Nonnull
     public Collection<IMember> getMembers() {
         return channel.getMembers();
     }
 
     @Override
     public void start() throws Exception {
-        if (isStarted())
+        if (isStarted()) {
             throw new RuntimeException("Chanel is already started.");
+        }
         // Open channel
-        logger.info("Opening channel '" + clusterName + "'");
+        logger.info("Opening channel '"
+                + clusterName + "'");
         try {
             channel.start();
         } catch (Exception e) {
-            logger.error("Unable to open channel '" + clusterName + "'", e);
+            logger.error("Unable to open channel '"
+                    + clusterName + "'", e);
             channel.stop();
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void close() throws Exception {
+        channel.close();
     }
 
     @Override
@@ -96,32 +150,57 @@ public abstract class AbstractChannelAdapter implements IChanelAdapter, IEndPoin
         return channel.isStarted();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void connect() throws Exception {
+        logger.info("connect channel '"
+                + clusterName + "'");
+        channel.connect();
+    }
+
     @Override
     public void stop() throws Exception {
-        if (!isStarted())
+        if (!isStarted()) {
             throw new RuntimeException("Channel is already stopped or not started.");
-        logger.info("Closing channel '" + clusterName + "'");
+        }
+        logger.info("Closing channel '"
+                + clusterName + "'");
         // Close
         channel.stop();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public abstract void memberJoined(@Nullable IMember member);
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public abstract void memberLeft(@Nullable IMember member);
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public abstract void receiveEvent(@Nullable MulticastEvent event);
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void sendNotification(MulticastEvent event) throws Exception {
-        if (event == null)
+    public void sendNotification(final MulticastEvent event) throws Exception {
+        if (event == null) {
             return;
-        if (event.getSource() == this)
+        }
+        if (event.getSource() == this) {
             return;
-        MulticastEvent multicastEvent = event;
-        this.channel.sendNotification(multicastEvent);
+        }
+        this.channel.sendNotification(event);
     }
 
 }

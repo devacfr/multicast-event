@@ -16,9 +16,7 @@
 package org.cfr.multicastevent.core;
 
 import java.util.Collection;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import java.util.EventObject;
 
 import org.cfr.multicastevent.core.spi.IMember;
 
@@ -27,53 +25,33 @@ import org.cfr.multicastevent.core.spi.IMember;
  * @author devacfr<christophefriederich@mac.com>
  * @since 1.0
  */
-public interface IChanelAdapter {
+public class MembersChangedEvent extends EventObject {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -3438936632485077928L;
+
+    /**
+     * 
+     */
+    private final Collection<IMember> members;
+
+    /**
+     * 
+     * @param members
+     * @param source
+     */
+    public MembersChangedEvent(final Collection<IMember> members, final Object source) {
+        super(source);
+        this.members = members;
+    }
 
     /**
      * 
      * @return
      */
-    @Nonnull
-    String getClusterName();
-
-    /**
-     * 
-     * @return
-     */
-    @Nonnull
-    Collection<IMember> getMembers();
-
-    /**
-     * Start the provider
-     * @throws Exception
-     */
-    void start() throws Exception;
-
-    /**
-     * stop the provider
-     * @throws Exception
-     */
-    void stop() throws Exception;
-
-    void connect() throws Exception;
-
-    /**
-     * 
-     * @throws Exception
-     */
-    void close() throws Exception;
-
-    /**
-     * 
-     * @return
-     */
-    boolean isStarted();
-
-    /**
-     * Publish an event to the multicast network.
-     * @param event the event
-     * @throws Exception 
-     */
-    void sendNotification(@Nullable MulticastEvent event) throws Exception;
-
+    public Collection<IMember> getMembers() {
+        return members;
+    }
 }

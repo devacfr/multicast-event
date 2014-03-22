@@ -19,6 +19,11 @@ import java.util.EventObject;
 
 import org.cfr.multicastevent.core.spi.IMember;
 
+/**
+ * 
+ * @author devacfr<christophefriederich@mac.com>
+ * @since 1.0
+ */
 public abstract class MemberEvent extends EventObject {
 
     /**
@@ -26,7 +31,7 @@ public abstract class MemberEvent extends EventObject {
      */
     private static final long serialVersionUID = -3438936632485077928L;
 
-    private IMember member;
+    private final IMember member;
 
     public MemberEvent(IMember member, Object source) {
         super(source);

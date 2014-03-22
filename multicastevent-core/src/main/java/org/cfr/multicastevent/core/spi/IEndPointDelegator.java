@@ -22,41 +22,43 @@ import javax.annotation.Nonnull;
 import org.cfr.multicastevent.core.MulticastEvent;
 
 /**
- * 
- * @author devacfr
+ * This is a protocol interface between the api and specific spi implementation.
+ * @author devacfr<christophefriederich@mac.com>
  * @since 1.0
  */
 public interface IEndPointDelegator {
 
     /**
-     * 
-     * @return
+     * Gets the name of current cluster.
+     * @return Returns a string representing the name of cluster.
      */
     @Nonnull
     String getClusterName();
 
     /**
-     * 
-     * @param event
+     * Allows to forward a received event to the event publisher.
+     * @param event event to forward.
+     * @see org.cfr.multicastevent.event.MulticastEventPublisher
      */
     void receiveEvent(@Nonnull MulticastEvent event);
 
     /**
-     * 
-     * @param member
+     * Allows to forward event indicating that member left the cluster to the event publisher.
+     * @param member the member has left.
      */
     void memberLeft(@Nonnull IMember member);
 
     /**
-     * 
-     * @param member
+     * Allows to forward event indicating that member joined the cluster to the event publisher.
+     * @param member the member has joined.
      */
     void memberJoined(@Nonnull IMember member);
 
     /**
-     * 
-     * @param member
+     * Allows to forward event indicating the list of members in the cluster has changed
+     * to the event publisher.
+     * @param members the new list of members.
      */
-    void memberChanged(@Nonnull Collection<IMember> member);
+    void membersChanged(@Nonnull Collection<IMember> members);
 
 }

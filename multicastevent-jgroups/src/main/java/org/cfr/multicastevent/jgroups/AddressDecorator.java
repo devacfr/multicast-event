@@ -32,6 +32,7 @@ import org.jgroups.stack.IpAddress;
 /**
  * JGroups Address Adapter
  * @author acochard
+ * @author devacfr<christophefriederich@mac.com>
  *
  */
 public class AddressDecorator implements IAddress, Address {

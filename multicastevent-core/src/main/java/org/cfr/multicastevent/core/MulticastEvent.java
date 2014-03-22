@@ -21,7 +21,8 @@ import org.cfr.multicastevent.core.spi.IAddress;
 
 /**
  * 
- * @author acochard, devacfr
+ * @author acochard
+ * @author devacfr<christophefriederich@mac.com>
  * @since 1.0
  */
 public class MulticastEvent extends EventObject {

@@ -13,18 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.cfr.multicastevent.core;
+package org.cfr.multicastevent.jgroups.spring;
+
+import org.cfr.multicastevent.core.IInboundEndpoint;
+import org.cfr.multicastevent.core.MulticastEvent;
 
 /**
- * 
  * @author devacfr<christophefriederich@mac.com>
- * @since 1.0
+ *
  */
-public interface IInboundEndpoint {
+public class InboundEndPoint implements IInboundEndpoint {
 
     /**
-     * 
-     * @param event
+     * {@inheritDoc}
      */
-    void receive(MulticastEvent event);
+    @Override
+    public void receive(MulticastEvent event) {
+        // TODO Auto-generated method stub
+
+    }
+
 }

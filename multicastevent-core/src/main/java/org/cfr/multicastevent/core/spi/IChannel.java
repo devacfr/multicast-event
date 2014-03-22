@@ -23,47 +23,71 @@ import javax.annotation.Nullable;
 import org.cfr.multicastevent.core.MulticastEvent;
 
 /**
+ * This class represents the channel of communication (Unicast, Multicast or Broadcast).
+ * @author devacfr<christophefriederich@mac.com>
+ * @since 1.0
  * 
- * @author cfriedri
- *
  */
 public interface IChannel {
 
     /**
-     * 
-     * @return
+     * Attaches the chanel to a end point delegator.
+     * @param endPoint end point delegator.
+     */
+    void attachChanel(IEndPointDelegator endPoint);
+
+    /**
+     * Gets indicating whether the channel is started ; the channel is opened.
+     * @return Returns <code>true</code> whether the channel is started, otherwise <code>false</code>.
      */
     boolean isStarted();
 
     /**
-     * 
-     * @throws Exception
+     * Disconnects the channel.
+     * @throws Exception If the channel can not be stop.
      */
     void stop() throws Exception;
 
     /**
-     * 
-     * @throws Exception
+     * Create and connects the channel to the cluster.
+     * @throws Exception If the channel can not be create.
      */
     void start() throws Exception;
 
     /**
-     * 
-     * @param event
-     * @throws Exception 
+     * connects the channel to the cluster.
+     * @throws Exception If the channel can not be connected.
+     */
+    void connect() throws Exception;
+
+    /**
+     * Disconnects and destroys the channel and its associated resources.
+     * @throws Exception If the channel can not be disconnected.
+     */
+    void close() throws Exception;
+
+    /**
+     * Sends a message. The message contains
+     * <ol>
+     * <li>a receiver address {@link IAddress}. A <code>null</code> address sends the message to all
+     * group members.
+     * <li>a sender address. Can be left empty as it will be assigned automatically.
+     * </ol>
+     * @param event the message to send.
+     * @throws Exception If the message can not be send.
      */
     void sendNotification(@Nullable MulticastEvent event) throws Exception;
 
     /**
-     * 
-     * @return
+     * Gets the member list of cluster.
+     * @return  Returns an unmodifiable member list of cluster.
      */
     @Nonnull
     Collection<IMember> getMembers();
 
     /**
-     * 
-     * @return
+     * Gets the local address of this node.
+     * @return Returns the local address of this node.
      */
     @Nonnull
     IAddress getLocalAddress();

@@ -27,6 +27,7 @@ import org.cfr.commons.util.Assert;
 import org.cfr.multicastevent.core.AbstractChannelAdapter;
 import org.cfr.multicastevent.core.MemberJoinedEvent;
 import org.cfr.multicastevent.core.MemberLeftEvent;
+import org.cfr.multicastevent.core.MembersChangedEvent;
 import org.cfr.multicastevent.core.MulticastClosingEvent;
 import org.cfr.multicastevent.core.MulticastEvent;
 import org.cfr.multicastevent.core.MulticastOpenEvent;
@@ -37,14 +38,11 @@ import com.atlassian.event.api.EventPublisher;
 
 /**
  * 
- * @author devacfr
+ * @author devacfr<christophefriederich@mac.com>
  * @since 1.0
  */
-@Named(MulticastEventPublisher.MULTICAST_EVENT_PUBLISHER_NAME)
 @Singleton
 public class MulticastEventPublisher extends AbstractChannelAdapter {
-
-    public final static String MULTICAST_EVENT_PUBLISHER_NAME = "MulticastEventPublisher";
 
     /**
      * this event publisher
@@ -68,46 +66,54 @@ public class MulticastEventPublisher extends AbstractChannelAdapter {
 
     @Override
     public void stop() throws Exception {
-        if (!isStarted())
+        if (!isStarted()) {
             throw new RuntimeException("Channel is already stopped or not started.");
+        }
         // Send event
         eventPublisher.publish(new MulticastClosingEvent(this));
         super.stop();
     }
 
     @Override
-    public void memberChanged(Collection<IMember> member) {
-        // TODO Auto-generated method stub
-
+    public void membersChanged(@Nonnull final Collection<IMember> members) {
+        if (members == null) {
+            return;
+        }
+        MembersChangedEvent event = new MembersChangedEvent(members, this);
+        eventPublisher.publish(event);
     }
 
     @Override
-    public void memberJoined(@Nullable IMember member) {
-        if (member == null)
+    public void memberJoined(@Nullable final IMember member) {
+        if (member == null) {
             return;
+        }
         MemberJoinedEvent event = new MemberJoinedEvent(member, this);
         eventPublisher.publish(event);
     }
 
     @Override
-    public void memberLeft(@Nullable IMember member) {
-        if (member == null)
+    public void memberLeft(@Nullable final IMember member) {
+        if (member == null) {
             return;
+        }
         MemberLeftEvent event = new MemberLeftEvent(member, this);
         eventPublisher.publish(event);
     }
 
     @Override
-    public void receiveEvent(@Nullable MulticastEvent event) {
+    public void receiveEvent(@Nullable final MulticastEvent event) {
         if (event == null) {
             return;
         }
         if (logger.isDebugEnabled()) {
-            logger.debug("Receiving multicast event: " + event.getClass());
+            logger.debug("Receiving multicast event: "
+                    + event.getClass());
         }
         event.setSource(this);
         if (logger.isDebugEnabled()) {
-            logger.debug("Receiving multicast event: " + event);
+            logger.debug("Receiving multicast event: "
+                    + event);
         }
         try {
             eventPublisher.publish(event);

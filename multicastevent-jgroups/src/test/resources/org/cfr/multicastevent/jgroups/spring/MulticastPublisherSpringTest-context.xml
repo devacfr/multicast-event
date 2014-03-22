@@ -1,0 +1,33 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="
+                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+
+
+    <!-- Master channel Section -->
+    <bean id="eventPublisher"
+        class="org.cfr.commons.event.spring.EventPublisherFactoryBean"></bean>
+    <bean id="chanel1" class="org.cfr.multicastevent.jgroups.JGroupsChannelBus">
+    </bean>
+    
+    <bean name="MasterChannelAdapter"
+        class="org.cfr.multicastevent.event.MulticastEventPublisher">
+        <constructor-arg ref="eventPublisher" />
+        <constructor-arg ref="chanel1" />
+        <constructor-arg value="cluster" />
+        <property name="startAfterInitialize" value="true"/> <!-- enable start on initialize-->
+    </bean>
+    <bean class="org.cfr.multicastevent.jgroups.spring.SimpleEventListener"/>
+
+    <!-- slave channel section -->
+    <bean id="chanel2" class="org.cfr.multicastevent.jgroups.JGroupsChannelBus" />
+    <bean name="SlaveChannelAdapter" class="org.cfr.multicastevent.core.DefaultChannelAdapter">
+        <constructor-arg ref="chanel2" />
+        <constructor-arg value="cluster" />
+        <property name="startAfterInitialize" value="false"/> <!-- start on initialize-->
+    </bean>
+</beans>

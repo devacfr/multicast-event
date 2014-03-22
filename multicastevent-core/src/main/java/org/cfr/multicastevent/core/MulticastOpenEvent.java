@@ -19,8 +19,8 @@ import java.util.EventObject;
 
 /**
  * 
- * @author devacfr
- *
+ * @author devacfr<christophefriederich@mac.com>
+ * @since 1.0
  */
 public class MulticastOpenEvent extends EventObject {
 

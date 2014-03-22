@@ -17,6 +17,11 @@ package org.cfr.multicastevent.core;
 
 import org.cfr.multicastevent.core.spi.IMember;
 
+/**
+ * 
+ * @author devacfr<christophefriederich@mac.com>
+ * @since 1.0
+ */
 public class MemberJoinedEvent extends MemberEvent {
 
     /**

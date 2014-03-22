@@ -17,25 +17,26 @@ package org.cfr.multicastevent.core.spi;
 
 import java.net.InetAddress;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
+ * This interface allows unifying different type of address.
  * 
- * @author cfriedri
- *
+ * @author devacfr<christophefriederich@mac.com>
+ * @since 1.0
  */
 public interface IAddress {
 
     /**
-     * 
-     * @return
+     * Gets the Internet Protocol address corresponding if exists.
+     * @return Return the the Internet Protocol address corresponding, otherwise returns <code>null</code>.
      */
-    @Nonnull
-    public InetAddress getIpAddress();
+    @Nullable
+    InetAddress getIpAddress();
 
     /**
-     * Gets serialized size of this address
-     * @return Returns serialized size of this address
+     * Gets serialised size of this address.
+     * @return Returns serialised size of this address.
      */
     int size();
 }

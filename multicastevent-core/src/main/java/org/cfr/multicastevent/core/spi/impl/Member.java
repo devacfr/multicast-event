@@ -24,24 +24,27 @@ import org.cfr.multicastevent.core.spi.IMember;
 /**
  * 
  * @author acochard
- * @author devacfr
+ * @author devacfr<christophefriederich@mac.com>
  * @since 1.0
  */
 public class Member implements IMember {
 
-    private InetAddress address;
+    /**
+     * IP address of member.
+     */
+    private final InetAddress address;
 
     /**
-     * 
-     * @param address
+     * Default constructor.
+     * @param address IP address of member
      */
-    public Member(@Nullable InetAddress address) {
+    public Member(@Nullable final InetAddress address) {
         super();
         this.address = address;
     }
 
     /**
-     * 
+     * {@inheritDoc}
      */
     @Override
     @Nullable
