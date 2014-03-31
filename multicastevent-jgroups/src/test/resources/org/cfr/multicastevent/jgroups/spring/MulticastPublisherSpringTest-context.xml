@@ -19,7 +19,7 @@
         <constructor-arg ref="eventPublisher" />
         <constructor-arg ref="chanel1" />
         <constructor-arg value="cluster" />
-        <property name="startAfterInitialize" value="true"/> <!-- enable start on initialize-->
+        <property name="startAfterInitialize" value="true"/> <!-- enable initialisation on spring context started -->
     </bean>
     <bean class="org.cfr.multicastevent.jgroups.spring.SimpleEventListener"/>
 
